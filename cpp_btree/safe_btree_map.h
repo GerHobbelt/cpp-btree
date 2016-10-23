@@ -33,9 +33,8 @@
 #include <memory>
 #include <utility>
 
-#include "btree_container.h"
-#include "btree_map.h"
-#include "safe_btree.h"
+#include <cpp_btree/btree_map.h>
+#include <cpp_btree/safe_btree.h>
 
 namespace btree {
 

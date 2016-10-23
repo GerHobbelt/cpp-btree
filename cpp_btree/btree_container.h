@@ -18,7 +18,7 @@
 #include <iosfwd>
 #include <utility>
 
-#include "btree.h"
+#include <cpp_btree/btree.h>
 
 namespace btree {
 

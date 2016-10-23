@@ -28,8 +28,7 @@
 #include <string>
 #include <utility>
 
-#include "btree.h"
-#include "btree_container.h"
+#include <cpp_btree/btree_container.h>
 
 namespace btree {
 
