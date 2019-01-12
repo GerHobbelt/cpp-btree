@@ -8,33 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		96161F961DB5CD7F005A2034 /* cpp_btree.c in Sources */ = {isa = PBXBuildFile; fileRef = 96161F951DB5CD7F005A2034 /* cpp_btree.c */; };
-		96161F971DB5CEAA005A2034 /* btree_container.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 96161F8E1DB5CD52005A2034 /* btree_container.h */; };
-		96161F981DB5CEAA005A2034 /* btree_map.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 96161F8F1DB5CD52005A2034 /* btree_map.h */; };
-		96161F991DB5CEAA005A2034 /* btree_set.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 96161F901DB5CD52005A2034 /* btree_set.h */; };
-		96161F9A1DB5CEAA005A2034 /* btree.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 96161F911DB5CD52005A2034 /* btree.h */; };
-		96161F9B1DB5CEAA005A2034 /* safe_btree_map.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 96161F921DB5CD52005A2034 /* safe_btree_map.h */; };
-		96161F9C1DB5CEAA005A2034 /* safe_btree_set.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 96161F931DB5CD52005A2034 /* safe_btree_set.h */; };
-		96161F9D1DB5CEAA005A2034 /* safe_btree.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 96161F941DB5CD52005A2034 /* safe_btree.h */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		96161F741DB5CB9D005A2034 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "include/$(PRODUCT_NAME)";
-			dstSubfolderSpec = 16;
-			files = (
-				96161F971DB5CEAA005A2034 /* btree_container.h in CopyFiles */,
-				96161F981DB5CEAA005A2034 /* btree_map.h in CopyFiles */,
-				96161F991DB5CEAA005A2034 /* btree_set.h in CopyFiles */,
-				96161F9A1DB5CEAA005A2034 /* btree.h in CopyFiles */,
-				96161F9B1DB5CEAA005A2034 /* safe_btree_map.h in CopyFiles */,
-				96161F9C1DB5CEAA005A2034 /* safe_btree_set.h in CopyFiles */,
-				96161F9D1DB5CEAA005A2034 /* safe_btree.h in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		96161F761DB5CB9D005A2034 /* libcpp_btree.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libcpp_btree.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -99,7 +73,6 @@
 			buildPhases = (
 				96161F721DB5CB9D005A2034 /* Sources */,
 				96161F731DB5CB9D005A2034 /* Frameworks */,
-				96161F741DB5CB9D005A2034 /* CopyFiles */,
 			);
 			buildRules = (
 			);

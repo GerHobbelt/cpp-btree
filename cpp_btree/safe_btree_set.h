@@ -33,8 +33,8 @@
 #include <functional>
 #include <memory>
 
-#include <cpp_btree/btree_set.h>
-#include <cpp_btree/safe_btree.h>
+#include "btree_set.h"
+#include "safe_btree.h"
 
 namespace btree {
 
