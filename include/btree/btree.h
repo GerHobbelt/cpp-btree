@@ -949,8 +949,13 @@ class btree : public Params::key_compare {
   using reverse_iterator = std::reverse_iterator<iterator>;
 
   using allocator_type = typename Params::allocator_type;
+#if ((defined(_MSVC_LANG) && _MSVC_LANG >= 201703L) || __cplusplus >= 201703L)
+  using internal_allocator_type =
+      typename std::allocator_traits<allocator_type>::template rebind_alloc<char>;
+#else
   using internal_allocator_type =
       typename allocator_type::template rebind<char>::other;
+#endif
 
  public:
   // Default constructor.

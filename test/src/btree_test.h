@@ -862,7 +862,14 @@ class TestAllocator : public Alloc {
   // Rebind allows an allocator<T> to be used for a different type
   template <class U>
   struct rebind {
-    using other = TestAllocator<U, typename Alloc::template rebind<U>::other>;
+
+#if ((defined(_MSVC_LANG) && _MSVC_LANG >= 201703L) || __cplusplus >= 201703L)
+  using other =
+      TestAllocator<U, typename std::allocator_traits<Alloc>::template rebind_alloc<U>>;
+#else
+  using other =
+      TestAllocator<U, typename Alloc::template rebind<U>::other>;
+#endif
   };
 
   int64_t *bytes_used() const { return bytes_used_; }
