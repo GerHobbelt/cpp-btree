@@ -144,13 +144,6 @@ struct big_ {
 	char dummy[2];
 };
 
-// A compile-time assertion.
-template <bool>
-struct CompileAssert { };
-
-#define COMPILE_ASSERT(expr, msg) \
-	typedef CompileAssert<(bool(expr))> msg[bool(expr) ? 1 : -1]
-
 struct btree_extract_key_fail_tag { };
 struct btree_extract_key_self_tag { };
 struct btree_extract_key_first_tag { };
@@ -267,6 +260,13 @@ struct btree_key_comparer<Key, Compare, true> {
 	}
 	Compare comp;
 };
+
+#ifdef _MSC_VER
+#include <BaseTsd.h>
+#define ssize_t SSIZE_T
+#else
+#include <cstdint>
+#endif
 
 // A helper function to compare to keys using the specified compare
 // functor. This dispatches to the appropriate btree_key_comparer comparison,
@@ -1743,17 +1743,17 @@ private:
 	// key_compare_checker() to instantiate and then figure out the size of the
 	// return type of key_compare_checker() at compile time which we then check
 	// against the sizeof of big_.
-	COMPILE_ASSERT(sizeof(key_compare_checker(key_compare_helper()(key_type(), key_type()))) == sizeof(big_),
-		key_comparison_function_must_return_bool);
+	static_assert(sizeof(key_compare_checker(key_compare_helper()(key_type(), key_type()))) == sizeof(big_),
+		"key_comparison_function_must_return_bool");
 
 	// Note: We insist on kTargetValues, which is computed from
 	// Params::kTargetNodeSize, must fit the base_fields::field_type.
-	COMPILE_ASSERT((kNodeValues < (1 << (8 * sizeof(typename base_fields::field_type)))),
-		target_node_size_too_large);
+	static_assert((kNodeValues < (1 << (8 * sizeof(typename base_fields::field_type)))),
+		"target_node_size_too_large");
 
 	// Test the assumption made in setting kNodeValueSpace.
-	COMPILE_ASSERT(sizeof(base_fields) >= 2 * sizeof(void*),
-		node_space_assumption_incorrect);
+	static_assert(sizeof(base_fields) >= 2 * sizeof(void*),
+		"node_space_assumption_incorrect");
 };
 
 ////
