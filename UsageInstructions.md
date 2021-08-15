@@ -139,4 +139,8 @@ The user-provided compare function should return `< 0` if `a` is less than `b`, 
 
 ## Biased insertion and deletion
 
-The insertion and deletion routines have special support to avoid unnecessary rebalancing of perfectly full trees. _Biased insertion_: special-case code ensures that when keys are inserted in ascending or descending order, the resulting tree will be completely full. _Biased deletion_: special-case code avoids rebalancing when removing the first or last element.
+The insertion and deletion routines have special support to avoid unnecessary rebalancing of perfectly full trees. 
+
+_Biased insertion_: special-case code ensures that when keys are inserted in ascending or descending order, the resulting tree will be completely full. 
+
+_Biased deletion_: special-case code avoids rebalancing when removing the first or last element.
