@@ -1,34 +1,44 @@
 # Introduction
 
-C++ B-tree containers have the same interface as the standard C++ containers, so it is relatively simple to replace `map` with `btree_map`, `set` with `btree_set`, `multimap` with `btree_multimap`, and `multiset` with `btree_multiset`. All the standard features (e.g., forward and reverse iterators) and operations (e.g., find, insert, add, lower_bound, upper_bound) are supported.
+C++ B-tree containers have the same interface as the standard C++ containers, so it is relatively simple to replace `map` with `btree_map`, `set` with `btree_set`, `multimap` with `btree_multimap`, and `multiset` with `btree_multiset`. All the standard features (e.g., forward and reverse iterators) and operations (e.g., find, insert, add, lower\_bound, upper\_bound) are supported.
 
-These containers take the same template parameters as the STL containers: the Key type, the Data type (for maps), a Compare function (optional), and an Allocator (optional). They take one additional template parameter, suggesting its node size. Based on experimental results for a variety of data types, the node size is set by default to 256 bytes, around the size of one or two L2 cache lines on most modern processors. The node size is the 4th template parameter for sets and the 5th template parameter for maps. All types are declared in the "btree" namespace.
+These containers take the same template parameters as the STL containers: the Key type, the Data type (for maps), a Compare function (optional), and an Allocator (optional). They take one additional template parameter, suggesting its node size. Based on experimental results for a variety of data types, the node size is set by default to 256 bytes, around the size of one or two L2 cache lines on most modern processors.  The node size is the 4th template parameter for sets and the 5th template parameter for maps.  All types are declared in the "btree" namespace.
 
-``` 
-namespace btree { 
-template , typename Alloc = std::allocator, int NodeSize = 256> class btree_set;
-template , typename Alloc = std::allocator >, int NodeSize = 256> class btree_map; 
-} 
+```
+namespace btree {
+template <typename Key,
+          typename Compare = std::less<Key>,
+          typename Alloc = std::allocator<Key>,
+          int NodeSize = 256>
+class btree_set;
+
+template <typename Key, 
+          typename Value,
+          typename Compare = std::less<Key>,
+          typename Alloc = std::allocator<std::pair<const Key, Value> >,
+          int NodeSize = 256>
+class btree_map;
+}
 ```
 
 ## Memory usage comparison
 
-For trees containing more than just a few elements, and especially for those with small value types, the C++ B-tree containers promise to reduce memory usage significantly. The following table shows the average number of bytes per value in the Red-Black set/map compared with the B-tree set/map for several types. Numbers are given for both sorted and random insertion, because the B-tree treats sorted insertion as a special case, yielding a full tree. Keep in mind that in the worst case, B-tree nodes will be 66% full, meaning average bytes per value can be up to 50% greater than the sorted insertion results shown here.
+For trees containing more than just a few elements, and especially for those with small value types, the C++ B-tree containers promise to reduce memory usage significantly.   The following table shows the average number of bytes per value in the Red-Black set/map compared with the B-tree set/map for several types.  Numbers are given for both sorted and random insertion, because the B-tree treats sorted insertion as a special case, yielding a full tree.  Keep in mind that in the worst case, B-tree nodes will be 66% full, meaning average bytes per value can be up to 50% greater than the sorted insertion results shown here.
 
-| **Type**                | **Insertion** | **B-Tree (32-bit)** | **Red-Black (32-bit)** | **B-Tree (64-bit)** | **Red-Black (64-bit)** | 
-|:------------------------|:--------------|:--------------------|:-----------------------|:--------------------|:-----------------------| 
-| `set<int32_t>` | sorted | 4.19 | 20.00 | 4.40 | 40.00 | 
-| | random | 4.90 | 20.00 | 5.15 | 40.00 | 
-| `set<int64_t>` | sorted | 8.39 | 24.00 | 8.80 | 40.00 | 
-| | random | 9.96 | 24.00 | 10.47 | 40.00 | 
-| `set<string>` | sorted | 24.57 | 40.00 | 33.60 | 64.00 | 
-| | random | 29.49 | 40.00 | 40.74 | 64.00 | 
-| `map<int32_t, void*>` | sorted | 8.39 | 24.00 | 8.80 | 48.00 | 
-| | random | 9.96 | 24.00 | 10.47 | 48.00 | 
-| `map<int64_t, void*>` | sorted | 12.60 | 28.00 | 13.20 | 48.00 | 
-| | random | 15.16 | 28.00 | 15.92 | 48.00 | 
-| `map<string, void*>` | sorted | 28.67 | 44.00 | 38.16 | 72.00 | 
-| | random | 34.49 | 44.00 | 46.53 | 72.00 |
+| **Type**                | **Insertion** | **B-Tree (32-bit)** | **Red-Black (32-bit)** | **B-Tree (64-bit)** | **Red-Black (64-bit)** |
+|:------------------------|:--------------|:--------------------|:-----------------------|:--------------------|:-----------------------|
+| `set<int32_t>`          | sorted      |   4.19  |  20.00  |   4.40  |  40.00  |
+|                       | random      |   4.90  |  20.00  |   5.15  |  40.00  |
+| `set<int64_t>`          | sorted      |   8.39  |  24.00  |   8.80  |  40.00  |
+|                       | random      |   9.96  |  24.00  |  10.47  |  40.00  |
+| `set<string>`         | sorted      |  24.57  |  40.00  |  33.60  |  64.00  |
+|                       | random      |  29.49  |  40.00  |  40.74  |  64.00  |
+| `map<int32_t, void*>`   | sorted      |   8.39  |  24.00  |   8.80  |  48.00  |
+|                       | random      |   9.96  |  24.00  |  10.47  |  48.00  |
+| `map<int64_t, void*>`   | sorted      |  12.60  |  28.00  |  13.20  |  48.00  |
+|                       | random      |  15.16  |  28.00  |  15.92  |  48.00  |
+| `map<string, void*>`  | sorted      |  28.67  |  44.00  |  38.16  |  72.00  |
+|                       | random      |  34.49  |  44.00  |  46.53  |  72.00  |
 
 ## Performance comparison
 
@@ -42,7 +52,11 @@ The next chart shows the average time to lookup randomly-ordered keys using the 
 
 ## Limitations
 
-As described below, there are a few limitations of the C++ B-tree. * Insertions into and deletions from B-tree containers **invalidate** existing iterators. See the discussion of "safe" maps and sets, below. * Iterator increment and decrement operations are slightly slower than their standard counterparts. * Due to a certain optimization (see the discussion of 3-way compare functions, below), this library depends on `<type_traits>` from the C++11 standard. * The C++11 `emplace` operations are not yet implemented (a TODO).
+As described below, there are a few limitations of the C++ B-tree.
+  * Insertions into and deletions from B-tree containers **invalidate** existing iterators. See the discussion of "safe" maps and sets, below.
+  * Iterator increment and decrement operations are slightly slower than their standard counterparts.
+  * Due to a certain optimization (see the discussion of 3-way compare functions, below), this library depends on `<type_traits>` from the C++11 standard.
+  * The C++11 `emplace` operations are not yet implemented (a TODO).
 
 # Details
 
@@ -53,7 +67,7 @@ The following example returns a new map of integer keys and pointers to `MyObjec
 ```
 #include "btree_map.h"
 
-typedef btree::btree_map MyMap;
+typedef btree::btree_map<int, MyObject*> MyMap;
 
 MyMap* BuildMap() { 
   MyMap *obj_map = new MyMap;
@@ -78,7 +92,7 @@ This example counts the number of duplicated integers in a series.
 ```
 #include "btree_set.h"
 
-typedef btree::btree_set IntSet;
+typedef btree::btree_set<int> IntSet;
 
 int CountDuplicates() { 
   IntSet iset; 
@@ -102,7 +116,7 @@ If iterator invalidation would otherwise prevent you from using the B-tree, it m
 
 Safe versions of `btree_multiset` and `btree_multimap` are not provided.
 
-In one common scenario, the only reason to keep an iterator across mutations to the container is to erase elements while performing a sequential scan. For this limited use-case, the `erase()` method returns an iterator at the next position in the tree,
+In one common scenario, the only reason to keep an iterator across mutations to the container is to erase elements while performing a sequential scan.  For this limited use-case, the `erase()` method returns an iterator at the next position in the tree,
 
 ## Intra-node search
 
@@ -113,10 +127,11 @@ For integer and floating point keys, we choose _linear search_ through the array
 Ordinarily, tree searches are performed using _less than_, a boolean function. Some data types (e.g., `std::string`) provide a natural 3-way compare function, which returns more information and can therefore reduce the number of comparisons needed. C++ B-tree containers support the use of 3-way compare functions by providing a Compare class that subclasses `btree_key_compare_to_tag`, for example:
 
 ```
-struct MyStringComparer : public btree_key_compare_to_tag { 
-  int operator()(const string &a, const string &b) const { 
-    return a.compare(b); 
-  } 
+struct MyStringComparer
+    : public btree_key_compare_to_tag {
+  int operator()(const string &a, const string &b) const {
+    return a.compare(b);
+  }
 };
 ```
 
