@@ -34,11 +34,11 @@ For trees containing more than just a few elements, and especially for those wit
 
 The chart below shows the average time to insert randomly-ordered keys using `set<int32_t>`, `btree_set<int32_t>`, `map<int32_t, void*>`, and `btree_map<int32_t, void*>`, on a 64-bit platform, as a function of container size.
 
-![http://chart.apis.google.com/chart?chxl=0%3A%7C10%7C100%7C1K%7C10K%7C100K%7C1M%7C10M&chd=s%3AaEDDFHP%2CdFDEEHN%2CbFDHLe6%2CfEEHLe2&chco=4488dd%2C8844dd%2Cdd4488%2Cdd8844&chxt=x&chls=1%2C1%2C0%7C1%2C1%2C0%7C1%2C1%2C0%7C1%2C1%2C0&chdl=B-tree%20map%7CB-tree%20set%7CSTL%20map%7CSTL%20set&cht=lc&chs=700x400&nonsense=image.png](http://chart.apis.google.com/chart?chxl=0%3A%7C10%7C100%7C1K%7C10K%7C100K%7C1M%7C10M&chd=s%3AaEDDFHP%2CdFDEEHN%2CbFDHLe6%2CfEEHLe2&chco=4488dd%2C8844dd%2Cdd4488%2Cdd8844&chxt=x&chls=1%2C1%2C0%7C1%2C1%2C0%7C1%2C1%2C0%7C1%2C1%2C0&chdl=B-tree%20map%7CB-tree%20set%7CSTL%20map%7CSTL%20set&cht=lc&chs=700x400&nonsense=image.png)
+![perf1.png](./perf1.png)
 
 The next chart shows the average time to lookup randomly-ordered keys using the same containers, also as a function of container size.
 
-![http://chart.apis.google.com/chart?chxl=0%3A%7C10%7C100%7C1K%7C10K%7C100K%7C1M%7C10M&chd=s%3ADDFGILU%2CDEFHIKR%2CDDFJOh6%2CDDFJOg5&chco=4488dd%2C8844dd%2Cdd4488%2Cdd8844&chxt=x&chls=1%2C1%2C0%7C1%2C1%2C0%7C1%2C1%2C0%7C1%2C1%2C0&chdl=B-tree%20map%7CB-tree%20set%7CSTL%20map%7CSTL%20set&cht=lc&chs=700x400&nonsense=image.png](http://chart.apis.google.com/chart?chxl=0%3A%7C10%7C100%7C1K%7C10K%7C100K%7C1M%7C10M&chd=s%3ADDFGILU%2CDEFHIKR%2CDDFJOh6%2CDDFJOg5&chco=4488dd%2C8844dd%2Cdd4488%2Cdd8844&chxt=x&chls=1%2C1%2C0%7C1%2C1%2C0%7C1%2C1%2C0%7C1%2C1%2C0&chdl=B-tree%20map%7CB-tree%20set%7CSTL%20map%7CSTL%20set&cht=lc&chs=700x400&nonsense=image.png)
+![perf2.png](./perf2.png)
 
 ## Limitations
 
