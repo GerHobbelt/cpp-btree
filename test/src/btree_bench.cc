@@ -14,7 +14,11 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#if defined(__unix__) || defined(__APPLE__)
 #include <sys/time.h>
+#elif defined(_WIN32)
+#include <sys/timeb.h>
+#endif
 #include <algorithm>
 #include <functional>
 #include <map>

@@ -169,6 +169,21 @@
 #define NDEBUG 1
 #endif
 
+#if !defined(HAVE_SSIZE_T) && !defined(HAVE_SSIZE_T_DEFINED)
+#define HAVE_SSIZE_T_DEFINED
+# if defined(_WIN32) && !defined(__CYGWIN__) && !defined(__WATCOMC__)
+#  if defined(_SSIZE_T_DEFINED) || defined(_SSIZE_T_)
+//typedef ssize_t ssize_t;
+#  elif defined(_WIN64)
+typedef __int64 ssize_t;
+#  else
+typedef long ssize_t;
+#  endif
+# else
+# include <unistd.h>  /* ssize_t */
+# endif
+#endif
+
 namespace btree {
 
 // Inside a btree method, if we just call swap(), it will choose the
