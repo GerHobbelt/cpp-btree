@@ -261,6 +261,13 @@ struct btree_key_comparer<Key, Compare, true> {
 	Compare comp;
 };
 
+#ifdef _MSC_VER
+#include <BaseTsd.h>
+#define ssize_t SSIZE_T
+#else
+#include <cstdint>
+#endif
+
 // A helper function to compare to keys using the specified compare
 // functor. This dispatches to the appropriate btree_key_comparer comparison,
 // depending on whether we have a compare-to functor or not (which depends on
