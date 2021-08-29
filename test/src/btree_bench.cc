@@ -580,7 +580,14 @@ MY_BENCHMARK(multimap_string);
 }  // namespace
 }  // namespace btree
 
-int main(int argc, char **argv) {
+
+
+#if defined(BUILD_MONOLITHIC)
+#define main(cnt, arr)      btree_bench_main(cnt, arr)
+#endif
+
+int main(int argc, const char** argv)
+{
   btree::RunBenchmarks();
   return 0;
 }
