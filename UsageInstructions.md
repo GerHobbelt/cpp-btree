@@ -50,6 +50,7 @@ The next chart shows the average time to lookup randomly-ordered keys using the 
 
 ![perf2.png](./perf2.png)
 
+
 ## Limitations
 
 As described below, there are a few limitations of the C++ B-tree.
@@ -57,6 +58,7 @@ As described below, there are a few limitations of the C++ B-tree.
   * Iterator increment and decrement operations are slightly slower than their standard counterparts.
   * Due to a certain optimization (see the discussion of 3-way compare functions, below), this library depends on `<type_traits>` from the C++11 standard.
   * The C++11 `emplace` operations are not yet implemented (a TODO).
+
 
 # Details
 
@@ -117,6 +119,7 @@ If iterator invalidation would otherwise prevent you from using the B-tree, it m
 Safe versions of `btree_multiset` and `btree_multimap` are not provided.
 
 In one common scenario, the only reason to keep an iterator across mutations to the container is to erase elements while performing a sequential scan.  For this limited use-case, the `erase()` method returns an iterator at the next position in the tree,
+
 
 ## Intra-node search
 
