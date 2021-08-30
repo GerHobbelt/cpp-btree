@@ -3,4 +3,4 @@
 //  cpp-btree
 //
 
-const char* const CPP_BTREE_VERSION = "1.0 rev 1";
+const char* const CPP_BTREE_VERSION = "1.1";

@@ -33,6 +33,14 @@
 #include "gflags/gflags.h"
 #include "std_add.h"
 
+
+#ifndef __GNUC__
+#ifndef __attribute__
+#define __attribute__(a)
+#endif
+#endif
+
+
 DEFINE_int32(test_random_seed, 123456789, "Seed for srand()");
 DEFINE_int32(benchmark_max_iters, 10000000, "Maximum test iterations");
 DEFINE_int32(benchmark_min_iters, 100, "Minimum test iterations");
@@ -161,7 +169,6 @@ void sink(const T &t0) {
 template <typename T>
 void BM_Insert(int n) {
   using V = typename std::remove_const<typename T::value_type>::type;
-  typename KeyOfValue<typename T::key_type, V>::type key_of_value;
 
   // Disable timing while we perform some initialization.
   StopBenchmarkTiming();
@@ -198,7 +205,6 @@ void BM_Insert(int n) {
 template <typename T>
 void BM_Lookup(int n) {
   using V = typename std::remove_const<typename T::value_type>::type;
-  typename KeyOfValue<typename T::key_type, V>::type key_of_value;
 
   // Disable timing while we perform some initialization.
   StopBenchmarkTiming();
@@ -230,7 +236,6 @@ void BM_Lookup(int n) {
 template <typename T>
 void BM_FullLookup(int n) {
   using V = typename std::remove_const<typename T::value_type>::type;
-  typename KeyOfValue<typename T::key_type, V>::type key_of_value;
 
   // Disable timing while we perform some initialization.
   StopBenchmarkTiming();
@@ -262,7 +267,6 @@ void BM_FullLookup(int n) {
 template <typename T>
 void BM_Delete(int n) {
   using V = typename std::remove_const<typename T::value_type>::type;
-  typename KeyOfValue<typename T::key_type, V>::type key_of_value;
 
   // Disable timing while we perform some initialization.
   StopBenchmarkTiming();
@@ -304,7 +308,6 @@ void BM_Delete(int n) {
 template <typename T>
 void BM_QueueAddRem(int n) {
   using V = typename std::remove_const<typename T::value_type>::type;
-  typename KeyOfValue<typename T::key_type, V>::type key_of_value;
 
   // Disable timing while we perform some initialization.
   StopBenchmarkTiming();
@@ -363,7 +366,6 @@ void BM_QueueAddRem(int n) {
 template <typename T>
 void BM_MixedAddRem(int n) {
   using V = typename std::remove_const<typename T::value_type>::type;
-  typename KeyOfValue<typename T::key_type, V>::type key_of_value;
 
   // Disable timing while we perform some initialization.
   StopBenchmarkTiming();

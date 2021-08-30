@@ -33,6 +33,7 @@
 #include <functional>
 #include <memory>
 
+#include "btree_container.h"
 #include "btree_set.h"
 #include "safe_btree.h"
 
