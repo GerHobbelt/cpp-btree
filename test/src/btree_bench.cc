@@ -84,11 +84,43 @@ struct BenchmarkRun {
 BenchmarkRun *first_benchmark;
 BenchmarkRun *current_benchmark;
 
+// Windows implementation:
+#if defined(_WIN32)
+#if defined(_MSC_VER) && !defined(__clang__) && !defined(__GNUC__) && !defined(NOMINMAX)
+#define NOMINMAX // Otherwise MS compilers act like idiots when using std::numeric_limits<>::max() and including windows.h
+#endif
+
+#include <windows.h>
+
+static int64_t nanotimer_frequency = 0;
+
+static inline int64_t get_nanotimer_frequency(void)
+{
+	if (nanotimer_frequency)
+		return nanotimer_frequency;
+
+	LARGE_INTEGER freq;
+	QueryPerformanceFrequency(&freq);
+	nanotimer_frequency = freq.QuadPart;
+}
+
+int64_t get_micros()
+{
+	LARGE_INTEGER ticks;
+	QueryPerformanceCounter(&ticks);
+	double t = (double)ticks.QuadPart * 1000000.0 / (double)get_nanotimer_frequency();
+	return (int64_t)t;
+}
+
+#else
+
 int64_t get_micros() {
   timeval tv;
   gettimeofday(&tv, nullptr);
   return tv.tv_sec * 1000000 + tv.tv_usec;
 }
+
+#endif
 
 BenchmarkRun::BenchmarkRun(const char *name, void (*func)(int))
     : next_benchmark(first_benchmark),
