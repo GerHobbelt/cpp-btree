@@ -201,6 +201,7 @@ void sink(const T &t0) {
 template <typename T>
 void BM_Insert(int n) {
   using V = typename std::remove_const<typename T::value_type>::type;
+  typename KeyOfValue<typename T::key_type, V>::type key_of_value;
 
   // Disable timing while we perform some initialization.
   StopBenchmarkTiming();
@@ -237,6 +238,7 @@ void BM_Insert(int n) {
 template <typename T>
 void BM_Lookup(int n) {
   using V = typename std::remove_const<typename T::value_type>::type;
+  typename KeyOfValue<typename T::key_type, V>::type key_of_value;
 
   // Disable timing while we perform some initialization.
   StopBenchmarkTiming();
@@ -268,6 +270,7 @@ void BM_Lookup(int n) {
 template <typename T>
 void BM_FullLookup(int n) {
   using V = typename std::remove_const<typename T::value_type>::type;
+  typename KeyOfValue<typename T::key_type, V>::type key_of_value;
 
   // Disable timing while we perform some initialization.
   StopBenchmarkTiming();
@@ -299,6 +302,7 @@ void BM_FullLookup(int n) {
 template <typename T>
 void BM_Delete(int n) {
   using V = typename std::remove_const<typename T::value_type>::type;
+  typename KeyOfValue<typename T::key_type, V>::type key_of_value;
 
   // Disable timing while we perform some initialization.
   StopBenchmarkTiming();
@@ -340,6 +344,7 @@ void BM_Delete(int n) {
 template <typename T>
 void BM_QueueAddRem(int n) {
   using V = typename std::remove_const<typename T::value_type>::type;
+  typename KeyOfValue<typename T::key_type, V>::type key_of_value;
 
   // Disable timing while we perform some initialization.
   StopBenchmarkTiming();
@@ -398,6 +403,7 @@ void BM_QueueAddRem(int n) {
 template <typename T>
 void BM_MixedAddRem(int n) {
   using V = typename std::remove_const<typename T::value_type>::type;
+  typename KeyOfValue<typename T::key_type, V>::type key_of_value;
 
   // Disable timing while we perform some initialization.
   StopBenchmarkTiming();
