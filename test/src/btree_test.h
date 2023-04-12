@@ -35,6 +35,36 @@ DECLARE_int32(benchmark_values);
 namespace btree {
 
 
+// Select the first member of a pair.
+template <class _Pair>
+struct select1st
+ {
+  const typename _Pair::first_type &operator()(const _Pair &__x) const {
+    return __x.first;
+  }
+};
+
+
+// Utility class to provide an accessor for a key given a value. The default
+// behavior is to treat the value as a pair and return the first element.
+template <typename K, typename V>
+struct KeyOfValue {
+  using type = select1st<V>;
+};
+
+
+template <typename T>
+struct identity {
+  inline const T &operator()(const T &t) const { return t; }
+};
+
+
+// Partial specialization of KeyOfValue class for when the key and value are
+// the same type such as in set<> and btree_set<>.
+template <typename K>
+struct KeyOfValue<K, K> {
+  using type = identity<K>;
+};
 
 
 // Counts the number of occurrences of "c" in a buffer.
@@ -121,6 +151,8 @@ class base_checker {
     return tree_iter;
   }
   void value_check(const value_type &x) {
+    typename KeyOfValue<typename TreeType::key_type,
+                        typename TreeType::value_type>::type key_of_value;
     const key_type &key = key_of_value(x);
     EXPECT_EQ(*find(key), x);
     lower_bound(key);
@@ -514,6 +546,8 @@ std::vector<V> GenerateValues(int n) {
 
 template <typename T, typename V>
 void DoTest(const char *name, T *b, const std::vector<V> &values) {
+  typename KeyOfValue<typename T::key_type, V>::type key_of_value;
+
   T &mutable_b = *b;
   const T &const_b = *b;
 
@@ -688,6 +722,7 @@ void DoTest(const char *name, T *b, const std::vector<V> &values) {
 template <typename T>
 void ConstTest() {
   using value_type = typename T::value_type;
+  typename KeyOfValue<typename T::key_type, value_type>::type key_of_value;
 
   T mutable_b;
   const T &const_b = mutable_b;
