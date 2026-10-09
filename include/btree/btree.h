@@ -893,6 +893,7 @@ public:
 		f->max_count = max_count;
 		f->count = 0;
 		f->parent = parent;
+		// Zeroed so construct_value's assert can detect double-construct.
 		assert(memset(&f->values, 0, max_count * sizeof(value_type)));
 		return n;
 	}
@@ -922,9 +923,15 @@ private:
 
 	template <typename... Args>
 	void construct_value(value_type* v, Args&&... args) {
+		// Non-zero here means a double-construct without an intervening
+		// destroy_value() (see its matching assert).
 		assert(memcmp(zero_value, v, sizeof(value_type)) == 0);
 
+#if __cplusplus > 201703L
+		std::construct_at(v, std::forward<Args>(args)...);
+#else
 		new (v) value_type(std::forward<Args>(args)...);
+#endif
 		// FIXME: The above should use allocator_traits, but allocator
 		// object is not available here at the nodes, is in the tree:
 		// allocator_type& alloc = allocator();
@@ -939,15 +946,15 @@ private:
 	}
 
 	void destroy_value(value_type* v) {
-		v->~value_type();
+		std::destroy_at(v);
 		// FIXME: The above should use allocator_traits, but allocator
 		// object is not available here at the nodes, is in the tree:
 		// allocator_type& alloc = allocator();
 		// allocator_traits::destroy(alloc, v);
 
-		// Not an assert: wrapping the zeroing in assert() meant NDEBUG
-		// builds silently skipped it (memcpy's return is always truthy).
-		memcpy(v, zero_value, sizeof(value_type));
+		// Debug-only (see construct_value's matching assert); NDEBUG
+		// builds skip the zeroing cost, not just its check.
+		assert(memcpy(v, zero_value, sizeof(value_type)));
 	}
 
 	void destroy_value(int i) {
