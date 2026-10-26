@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 German Mendez Bravo (Kronuz)
+ * Copyright (c) 2019-2026 Germán Méndez Bravo (Kronuz)
  * Copyright (c) 2013 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -1849,6 +1849,8 @@ private:
 	iterator internal_emplace(const_iterator hint, Args&&... args);
 	template <typename... Args>
 	iterator emplace_empty(Args&&... args);
+	template <typename... Args>
+	iterator grow_leaf_root(int position, Args&&... args);
 
 	// Returns an iterator pointing to the first value >= the value "iter" is
 	// pointing at. Note that "iter" might be pointing to an invalid location as
@@ -2755,6 +2757,37 @@ btree<P>::emplace_empty(Args&&... args) {
 
 template <typename P> template <typename... Args>
 inline typename btree<P>::iterator
+btree<P>::grow_leaf_root(int position, Args&&... args) {
+	auto* original = root();
+	auto* replacement = new_leaf_root_node(std::min<int>(kNodeValues, 2 * original->max_count()));
+	bool incoming_live = false;
+	bool keys_consumed = false;
+	try {
+		replacement->construct_value(position, std::forward<Args>(args)...);
+		incoming_live = true;
+		for (int i = 0, source = 0; i <= original->count(); ++i) {
+			if (i == position) {
+				incoming_live = false;
+			} else {
+				if constexpr (std::is_same<key_type, value_type>::value && !std::is_copy_constructible<value_type>::value)
+					keys_consumed = true;
+				replacement->construct_value(i, std::move_if_noexcept(original->value(source++)));
+			}
+			replacement->set_count(i + 1);
+		}
+	} catch (...) {
+		if (incoming_live) replacement->destroy_value(position);
+		delete_leaf_node(replacement);
+		if (keys_consumed) clear();
+		throw;
+	}
+	__root() = replacement;
+	delete_leaf_node(original);
+	return iterator(replacement, position);
+}
+
+template <typename P> template <typename... Args>
+inline typename btree<P>::iterator
 btree<P>::internal_emplace(const_iterator hint, Args&&... args) {
 	iterator iter(hint.node, hint.position);
 	if (!iter.node->is_leaf()) {
@@ -2763,24 +2796,23 @@ btree<P>::internal_emplace(const_iterator hint, Args&&... args) {
 		--iter;
 		++iter.position;
 	}
+	bool update_size = false;
 	if (iter.node->count() == iter.node->max_count()) {
 		// Make room in the leaf for the new item.
 		if (iter.node->max_count() < kNodeValues) {
 			// Insertion into the root where the root is smaller that the full node
 			// size. Simply grow the size of the root node.
 			assert(iter.node == root());
-			iter.node = new_leaf_root_node(std::min<int>(kNodeValues, 2 * iter.node->max_count()));
-			iter.node->swap(root());
-			delete_leaf_node(root());
-			__root() = iter.node;
+			return grow_leaf_root(iter.position, std::forward<Args>(args)...);
 		} else {
 			rebalance_or_split(iter);
 			++__size();
 		}
-	} else if (!root()->is_leaf()) {
-		++__size();
+	} else {
+		update_size = !root()->is_leaf();
 	}
 	iter.node->insert_value(iter.position, std::forward<Args>(args)...);
+	if (update_size) ++__size();
 	return iter;
 }
 

@@ -1,4 +1,8 @@
-# cpp-btree
+# btree
+
+Part of [Kronuz C++ Libraries](https://github.com/Kronuz/cpp-libraries), a collection of small, reusable C++ libraries.
+
+[![CI](https://github.com/Kronuz/btree/actions/workflows/ci.yml/badge.svg)](https://github.com/Kronuz/btree/actions/workflows/ci.yml)
 
 ![C++17](https://img.shields.io/badge/C%2B%2B-17%20%7C%2020-blue.svg)
 ![Header-only](https://img.shields.io/badge/header--only-yes-green.svg)
@@ -24,7 +28,7 @@ behave like the C++17 standard containers.
 ## 📦 Installation
 
 Header-only and dependency-free: copy the `btree/` directory onto your include path.
-It builds as C++17 or C++20.
+It builds as C++17 or C++20. CMake consumers can use `add_subdirectory` or FetchContent and link `btree::btree`; tests build only when this repository is the top-level project.
 
 ## 🚀 Quick start
 
@@ -71,8 +75,7 @@ Issues and pull requests are welcome.
 
 ## 📄 License
 
-Apache 2.0. See [LICENSE](LICENSE). Copyright (c) 2013 Google Inc. and (c) 2019
-Germán Méndez Bravo.
+Apache 2.0. See [LICENSE](LICENSE) and [NOTICE](NOTICE). Copyright (c) 2013 Google Inc. and (c) 2019-2026 Germán Méndez Bravo.
 
 Range insertion and range construction refresh their end hint after each insertion, including root growth and splits. The compact-layout suite compares all four container families with standard ordered containers for duplicate input and populated destinations.
 
@@ -83,3 +86,11 @@ First insertion publishes its root only after constructing the value. Allocation
 Copies construct a compact ordered shape without key comparisons and release every completed value and node on failure, including nested containers. Copy assignment retains clear-then-copy behavior: a failed copy leaves the destination empty, and does not preserve its prior contents. Other mutation failure guarantees are unchanged.
 
 Known limitation: nested containers with non-default-constructible allocators can fail constructor-trait instantiation under Clang with libstdc++ 13 in C++20. The ordered-copy repair does not change constructor constraints; this remains a separate compatibility issue.
+
+Compact leaf-root growth constructs the incoming value first in its final replacement slot, then relocates existing values under counted ownership. Failed copying leaves original contents intact; throwing move-only mapped values can remain moved-from. After a destructive move of a noncopyable set key fails, the set becomes empty and reusable. Explicit moves from contained mapped arguments may consume them. Other insertion and erase paths retain their existing limitations.
+
+## Repository compatibility
+
+This repository was renamed from `Kronuz/cpp-btree` to `Kronuz/btree`. GitHub redirects old repository and clone URLs; the history and stars stay with this repository. Keep the old repository name unused to preserve those redirects. Header paths remain `btree/map.h` and `btree/set.h`. The original `cpp_btree::cpp_btree` CMake target remains an alias of the same interface target as `btree::btree`.
+
+Nonfull leaf insertion publishes the internal-root size after successful value construction. Refused append leaves the previous size intact and retry reuses existing capacity. Full-node split failure and general mutation safety remain separate qualification work.
